@@ -23,6 +23,7 @@ namespace PAW3CP1.Core.BusinessLogic
 
         public async Task<IEnumerable<Tasks>> GetTask(int? id)
         {
+
             return id == null
                 ? await repositoryTask.ReadAsync()
                 : [await repositoryTask.FindAsync((int)id)];

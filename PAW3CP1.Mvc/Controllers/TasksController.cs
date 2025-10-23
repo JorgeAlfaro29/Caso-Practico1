@@ -21,7 +21,11 @@ namespace PAW3CP1.Mvc.Controllers
         public async Task<IActionResult> Index()
         {
             var tasks = await _taskService.GetDataAsync<TaskDTO>();
-            return View(tasks);
+            var filtered = tasks?
+                 .Where(t => t.Approved.HasValue)
+                 .OrderByDescending(t => t.Approved)
+                 ?? Enumerable.Empty<TaskDTO>();
+            return View(filtered);
         }
 
         // GET: TasksController/Details/5
