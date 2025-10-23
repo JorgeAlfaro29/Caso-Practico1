@@ -4,7 +4,7 @@ using PAW3CP1.Data.Models;
 using PAW3CP1.Data.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<TaskDb2Context>(opt =>
+builder.Services.AddDbContext<TaskDbContext>(opt =>
     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -19,7 +19,7 @@ app.MapGet("/Task", async (ITaskBusiness taskBusiness) =>
     Results.Ok(await taskBusiness.GetTask(id: null)));
 
 
-app.MapGet("/Task/complete", async (TaskDb2Context db) =>
+app.MapGet("/Task/complete", async (TaskDbContext db) =>
     await db.Tasks.Where(t => t.Id != 0).ToListAsync());
 
 
