@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PAW3CP1.Data.Models;
 
-public partial class TaskDb2Context : DbContext
+public partial class TaskDbContext : DbContext
 {
-    public TaskDb2Context()
+    public TaskDbContext()
     {
     }
 
-    public TaskDb2Context(DbContextOptions<TaskDb2Context> options)
+    public TaskDbContext(DbContextOptions<TaskDbContext> options)
         : base(options)
     {
     }
@@ -25,7 +25,7 @@ public partial class TaskDb2Context : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=Jorge;Database=TaskDB2;Trusted_Connection=True;TrustServerCertificate=True;");
+        => optionsBuilder.UseSqlServer("Server=RQUESADA-D;Database=TaskDb;Trusted_Connection=True;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

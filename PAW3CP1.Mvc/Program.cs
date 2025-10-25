@@ -9,6 +9,8 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<IRestProvider, RestProvider>();
 builder.Services.AddScoped<ITaskService, TaskService>();
+builder.Services.AddScoped<IUserService, UserService>();
+
 
 
 var app = builder.Build();
@@ -30,6 +32,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Login}/{action=Login}/{id?}");
 
 app.Run();
