@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PAW3CP1.Models.DTO;
 using PAW3CP1.Mvc.ServiceApi;
@@ -21,6 +22,7 @@ namespace PAW3CP1.Mvc.Controllers
         public async Task<IActionResult> Index()
         {
             var tasks = await _taskService.GetDataAsync<TaskDTO>();
+
             var filtered = tasks?
                  .Where(t => t.Approved.HasValue)
                  .OrderByDescending(t => t.Approved)
