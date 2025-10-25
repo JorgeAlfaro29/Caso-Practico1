@@ -1,8 +1,28 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    var userId = TempData["UserId"];
+    var username = TempData["Username"] as string;
+    var email = TempData["UserEmail"] as string;
+    var fullName = TempData["UserFullName"] as string;
+    var isActive = TempData["UserIsActive"];
+    var createdAt = TempData["UserCreatedAt"] as string;
+    var lastLogin = TempData["UserLastLogin"] as string;
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+
+
+    <p>Prueba TempDATA</p>
+    <p>@userId</p>
+    <p>@username</p>
+    <p>@email</p>
+    <p>@fullName</p>
+    <p>@isActive</p>
+    <p>@createdAt</p>
+    <p>@lastLogin</p>
+        
+
 </div>
