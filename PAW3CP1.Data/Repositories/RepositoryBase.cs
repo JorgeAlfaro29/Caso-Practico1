@@ -78,8 +78,8 @@ namespace PAW3CP1.Data.Repositories
     
     public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {
-        private readonly TaskDb2Context _context;
-        protected TaskDb2Context DbContext => _context;
+        private readonly TaskDbContext _context;
+        protected TaskDbContext DbContext => _context;
         protected DbSet<T> DbSet;
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace PAW3CP1.Data.Repositories
         /// </summary>
         public RepositoryBase()
         {
-            _context = new TaskDb2Context();
+            _context = new TaskDbContext();
             DbSet<T> _sdbSet = _context.Set<T>();
         }
 
