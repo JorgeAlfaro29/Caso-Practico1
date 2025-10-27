@@ -1,0 +1,45 @@
+﻿@model IEnumerable<PAW3CP1.Models.DTO.TaskDTO>
+
+<h2>Flujo de Aprobaciones</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Título</th>
+            <th>Estado</th>
+            <th>Fecha (UTC)</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.OrderBy(r => r.Status ?? ""))
+        {
+            <tr>
+                <td>@item.Name</td>
+                
+                <td>@(!string.IsNullOrWhiteSpace(item.Status) ? item.Status : "Sin estado")</td>
+                <td>@(item.CreatedAt.HasValue? item.CreatedAt.Value.ToUniversalTime().ToString("g") : "Sin fecha")</td>
+                <td>
+                    @*se comenta para nivel de pruebas ya que falta los roles*@
+                   @*if (User.IsInRole("Manager"))*@
+
+                    {
+                        <button onclick="updateStatus(@item.Id, 'Approved')">Aprobar</button>
+                        <button onclick="updateStatus(@item.Id, 'Denied')">Denegar</button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    async function updateStatus(id, status) {
+        const response = await fetch(`/approvals/${id}?status=${status}`, {
+            method: "PUT"
+        });
+        const result = await response.json();
+        alert(result.message);
+        location.reload();
+    }
+</script>
