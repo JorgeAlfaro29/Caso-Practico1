@@ -44,10 +44,10 @@ namespace PAW3CP1.Mvc.Controllers
 
                 return RedirectToAction("Index", "Home");
             }
-            catch (InvalidOperationException)
+            catch (Exception ex)
             {
                 ViewBag.Error = "Correo o contraseña incorrectos.";
-                return View();
+                return View("Login");
             }
         }
     }
