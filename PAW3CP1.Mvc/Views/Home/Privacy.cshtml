@@ -1,5 +1,16 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+
+@{
     ViewData["Title"] = "Privacy Policy";
+    var userId = HttpContextAccessor.HttpContext.Session.GetInt32("UserId");
+    var username = HttpContextAccessor.HttpContext.Session.GetString("Username");
+    var userEmail = HttpContextAccessor.HttpContext.Session.GetString("UserEmail");
+    var userFullName = HttpContextAccessor.HttpContext.Session.GetString("UserFullName");
+    var userIsActive = HttpContextAccessor.HttpContext.Session.GetString("UserIsActive");
+    var userCreatedAt = HttpContextAccessor.HttpContext.Session.GetString("UserCreatedAt");
+    var userLastLogin = HttpContextAccessor.HttpContext.Session.GetString("UserLastLogin");
 }
 <h1>@ViewData["Title"]</h1>
 
