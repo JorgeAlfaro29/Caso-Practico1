@@ -1,12 +1,15 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-    var userId = TempData["UserId"];
-    var username = TempData["Username"] as string;
-    var email = TempData["UserEmail"] as string;
-    var fullName = TempData["UserFullName"] as string;
-    var isActive = TempData["UserIsActive"];
-    var createdAt = TempData["UserCreatedAt"] as string;
-    var lastLogin = TempData["UserLastLogin"] as string;
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+
+@{
+    var userId = HttpContextAccessor.HttpContext.Session.GetInt32("UserId");
+    var username = HttpContextAccessor.HttpContext.Session.GetString("Username");
+    var userEmail = HttpContextAccessor.HttpContext.Session.GetString("UserEmail");
+    var userFullName = HttpContextAccessor.HttpContext.Session.GetString("UserFullName");
+    var userIsActive = HttpContextAccessor.HttpContext.Session.GetString("UserIsActive");
+    var userCreatedAt = HttpContextAccessor.HttpContext.Session.GetString("UserCreatedAt");
+    var userLastLogin = HttpContextAccessor.HttpContext.Session.GetString("UserLastLogin");
 }
 
 <div class="text-center">
@@ -15,14 +18,14 @@
 
 
 
-    <p>Prueba TempDATA</p>
+    <h2>Prueba TempDATA</h2>
     <p>@userId</p>
     <p>@username</p>
-    <p>@email</p>
-    <p>@fullName</p>
-    <p>@isActive</p>
-    <p>@createdAt</p>
-    <p>@lastLogin</p>
+    <p>@userEmail</p>
+    <p>@userFullName</p>
+    <p>@userIsActive</p>
+    <p>@userCreatedAt</p>
+    <p>@userLastLogin</p>
         
 
 </div>

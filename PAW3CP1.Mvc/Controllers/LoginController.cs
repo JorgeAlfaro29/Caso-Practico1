@@ -33,14 +33,14 @@ namespace PAW3CP1.Mvc.Controllers
                     return View("Login");
                 }
 
-                // TempData
-                TempData["UserId"] = user.UserId;  
-                TempData["Username"] = user.Username;
-                TempData["UserEmail"] = user.Email;
-                TempData["UserFullName"] = user.FullName;
-                TempData["UserIsActive"] = user.IsActive;
-                TempData["UserCreatedAt"] = user.CreatedAt.ToString("g");
-                TempData["UserLastLogin"] = user.LastLogin?.ToString("g") ?? "Nunca";
+                // Session https://learn.microsoft.com/en-us/aspnet/core/fundamentals/app-state?view=aspnetcore-9.0
+                HttpContext.Session.SetInt32("UserId", user.UserId);
+                HttpContext.Session.SetString("Username", user.Username ?? "");
+                HttpContext.Session.SetString("UserEmail", user.Email ?? "");
+                HttpContext.Session.SetString("UserFullName", user.FullName ?? "");
+                HttpContext.Session.SetString("UserIsActive", user.IsActive.ToString());
+                HttpContext.Session.SetString("UserCreatedAt", user.CreatedAt.ToString("g"));
+                HttpContext.Session.SetString("UserLastLogin", user.LastLogin?.ToString("g") ?? "Nunca");
 
                 return RedirectToAction("Index", "Home");
             }
@@ -50,5 +50,13 @@ namespace PAW3CP1.Mvc.Controllers
                 return View("Login");
             }
         }
+
+        [HttpGet]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Login", "Login");
+        }
+
     }
 }
