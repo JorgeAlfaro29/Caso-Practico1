@@ -24,6 +24,8 @@ builder.Services.AddScoped<ITaskBusiness, TaskBusiness>();
 builder.Services.AddScoped<IRestProvider, RestProvider>();
 builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserRoleService, UserRoleService>();
+
 
 
 

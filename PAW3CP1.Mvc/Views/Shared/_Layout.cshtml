@@ -32,18 +32,21 @@
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li>
-                                <li>
                                     <a class="dropdown-item" asp-controller="Tasks" asp-action="Index">Tasks List</a>
-
                                 </li>
-                                @*@if (User.IsInRole("Manager") || User.IsInRole("SystemAdmin"))*@
+
+                                @* ✅ Mostrar "Aprobaciones" solo para Manager o System Admin *@
+                                @if (TempData["Username"]?.ToString() == "Manager" || TempData["Username"]?.ToString() == "System Admin")
                                 {
                                     <li>
                                         <a class="dropdown-item" asp-controller="Approval" asp-action="Index">Aprobaciones</a>
                                     </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="UserRole" asp-action="Index">Asignar Roles</a>
+                                    </li>
                                 }
-
                             </ul>
+
                         </li>
                     </ul>
                 </div>
