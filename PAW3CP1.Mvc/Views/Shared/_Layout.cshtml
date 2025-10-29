@@ -9,6 +9,7 @@
     var userIsActive = HttpContextAccessor.HttpContext.Session.GetString("UserIsActive");
     var userCreatedAt = HttpContextAccessor.HttpContext.Session.GetString("UserCreatedAt");
     var userLastLogin = HttpContextAccessor.HttpContext.Session.GetString("UserLastLogin");
+    var userRole = HttpContextAccessor.HttpContext.Session.GetInt32("UserRole") ?? 0;
 }
 
 <!DOCTYPE html>
@@ -116,7 +117,7 @@
                                 <li>
                                     <a class="dropdown-item" asp-controller="Tasks" asp-action="Index">Lista de tareas</a>
                                 </li>
-                                @*@if (User.IsInRole("Manager") || User.IsInRole("SystemAdmin"))*@
+                                @if (userRole == 1 || userRole == 2)
                                 {
                                 <li>
                                     <a class="dropdown-item" asp-controller="Approval" asp-action="Index">Aprobaciones</a>

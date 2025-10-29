@@ -53,14 +53,25 @@ app.MapGet("/userroles/view", async (TaskDbContext db) =>
         .ThenInclude(ur => ur.Role)
         .ToListAsync();
 
-    var result = users.Select(u => new UserRoleViewDTO
+    var result = users.Select(u => new UserRoleDTO
     {
         UserId = u.UserId,
-        Email = u.Email,
-        FullName = u.FullName ?? "",
-        CurrentRoleId = u.UserRoles.FirstOrDefault()?.RoleId ?? 0,
-        CurrentRoleName = u.UserRoles.FirstOrDefault()?.Role?.RoleName ?? "Sin rol",
-        AvailableRoles = roles
+        RoleId = u.UserRoles.FirstOrDefault()?.RoleId ?? 0,
+        Description = u.UserRoles.FirstOrDefault()?.Description ?? "Sin rol asignado",
+        Role = u.UserRoles.FirstOrDefault()?.Role != null
+            ? new RoleDTO
+            {
+                RoleId = u.UserRoles.First().Role.RoleId,
+                RoleName = u.UserRoles.First().Role.RoleName,
+                Description = u.UserRoles.First().Role.Description
+            }
+            : null,
+        User = new UserDTO
+        {
+            UserId = u.UserId,
+            Username = u.Username,
+            Email = u.Email
+        }
     }).ToList();
 
     return Results.Ok(result);
