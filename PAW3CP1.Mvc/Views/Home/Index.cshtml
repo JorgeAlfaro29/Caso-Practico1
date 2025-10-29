@@ -1,7 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor HttpContextAccessor
-
-
+@* Diseño con IA, prompt: tome de referencia el layout para hacer la vista.*@
 @{
     var userId = HttpContextAccessor.HttpContext.Session.GetInt32("UserId");
     var username = HttpContextAccessor.HttpContext.Session.GetString("Username");
@@ -10,22 +9,107 @@
     var userIsActive = HttpContextAccessor.HttpContext.Session.GetString("UserIsActive");
     var userCreatedAt = HttpContextAccessor.HttpContext.Session.GetString("UserCreatedAt");
     var userLastLogin = HttpContextAccessor.HttpContext.Session.GetString("UserLastLogin");
+    var userRole = HttpContextAccessor.HttpContext.Session.GetInt32("UserRole");
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+    /* CONTENEDOR PRINCIPAL */
+    .welcome-container {
+        background: #ffffffee;
+        border-radius: 1rem;
+        padding: 3rem 2rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        max-width: 900px;
+        margin: 3rem auto;
+        text-align: center;
+    }
 
+    /* TÍTULOS */
+    .welcome-title {
+        font-weight: 700;
+        font-size: 2.2rem;
+        color: #007bff;
+        margin-bottom: 1rem;
+    }
 
+    .welcome-subtitle {
+        font-size: 1.1rem;
+        color: #555;
+        margin-bottom: 2rem;
+    }
 
-    <h2>Prueba TempDATA</h2>
-    <p>@userId</p>
-    <p>@username</p>
-    <p>@userEmail</p>
-    <p>@userFullName</p>
-    <p>@userIsActive</p>
-    <p>@userCreatedAt</p>
-    <p>@userLastLogin</p>
-        
+    /* SECCIÓN DE DATOS DEL USUARIO */
+    .user-info {
+        text-align: left;
+        background: #f8faff;
+        border-radius: 0.75rem;
+        padding: 1.5rem 2rem;
+        margin: 0 auto;
+        display: inline-block;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    }
+
+        .user-info h3 {
+            color: #6c5ce7;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .user-info p {
+            font-size: 1rem;
+            margin: 0.4rem 0;
+            color: #333;
+        }
+
+        .user-info strong {
+            color: #007bff;
+        }
+
+    /* ENLACES */
+    .learn-link {
+        display: inline-block;
+        margin-top: 1.5rem;
+        font-weight: 500;
+        color: #007bff;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+
+        .learn-link:hover {
+            color: #6c5ce7;
+            text-decoration: underline;
+        }
+
+    /* RESPONSIVE */
+    @@media (max-width: 576px) {
+        .welcome-container {
+            padding: 2rem 1rem;
+        }
+
+        .user-info {
+            padding: 1rem;
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="welcome-container">
+    <h1 class="welcome-title">¡Bienvenido @userFullName!</h1>
+    <p class="welcome-subtitle">
+        Caso Practico#1-Grupo#3: <br>Jorge Alfaro, Michelle Obando, Robert Quesada, Johel Mu;oz 
+    </p>
+
+    <div class="user-info">
+        <h3>Información de Usuario</h3>
+        <p><strong>ID:</strong> @userId</p>
+        <p><strong>Usuario:</strong> @username</p>
+        <p><strong>Email:</strong> @userEmail</p>
+        <p><strong>Nombre completo:</strong> @userFullName</p>
+        <p><strong>Activo:</strong> @(userIsActive == "True" ? "Sí" : "No")</p>
+        <p><strong>Creado en:</strong> @userCreatedAt</p>
+        <p><strong>Último inicio de sesión:</strong> @userLastLogin</p>
+        <p><strong>Role:</strong> @userRole</p>
+
+    </div>
 
 </div>

@@ -1,77 +1,131 @@
 ﻿@model IEnumerable<PAW3CP1.Models.DTO.TaskDTO>
-
+@* Diseño con IA, prompt: tome de referencia el layout para hacer la vista.*@
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Lista de Tareas";
 }
 
-<h1>Lista de Tareas</h1>
+<style>
+    /* CONTENEDOR PRINCIPAL */
+    .tasks-container {
+        background: #ffffffee;
+        border-radius: 1rem;
+        padding: 2rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        margin-top: 2rem;
+    }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DueDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                    @Html.DisplayNameFor(model => model.Approved)
-            </th>
-            
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-            </td>
-            <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                    @Html.DisplayFor(modelItem => item.DueDate)
-            </td>
-            <td>
-                    @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            
-            <td>
-                
-                @Html.DisplayFor(modelItem => item.Approved)
-                
-             </td>
-            
-             @*@if(userRole=="Admin" || userRole=="Manager")*@
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-            </td>
-             
-        </tr>
-}
-    </tbody>
-</table>
+        /* TÍTULO */
+        .tasks-container h1 {
+            font-weight: 700;
+            color: #007bff;
+            margin-bottom: 1.5rem;
+        }
+
+    /* BOTÓN CREAR NUEVO */
+    .create-btn {
+        display: inline-block;
+        background: linear-gradient(135deg, #74b9ff, #a29bfe);
+        color: white;
+        padding: 0.6rem 1.2rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s ease-in-out;
+    }
+
+        .create-btn:hover {
+            background: linear-gradient(135deg, #6c5ce7, #0984e3);
+            text-decoration: none;
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+    /* TABLA */
+    .custom-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 0.75rem;
+        overflow: hidden;
+        background: white;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        margin-top: 1.5rem;
+    }
+
+        .custom-table thead {
+            background: linear-gradient(135deg, #74b9ff, #a29bfe);
+            color: white;
+            font-weight: 600;
+        }
+
+        .custom-table th, .custom-table td {
+            padding: 0.9rem 1rem;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .custom-table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+            .custom-table tbody tr:hover {
+                background-color: #f1f7ff;
+            }
+
+    /* ENLACES DE ACCIÓN */
+    .action-links a {
+        text-decoration: none;
+        color: #007bff;
+        font-weight: 500;
+        margin: 0 0.4rem;
+        transition: color 0.2s;
+    }
+
+        .action-links a:hover {
+            color: #6c5ce7;
+        }
+</style>
+
+<div class="tasks-container">
+    <h1>Lista de Tareas</h1>
+
+    <p>
+        <a asp-action="Create" class="create-btn">+ Crear Nueva Tarea</a>
+    </p>
+
+    <table class="custom-table">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Id)</th>
+                <th>@Html.DisplayNameFor(model => model.Name)</th>
+                <th>@Html.DisplayNameFor(model => model.Description)</th>
+                <th>@Html.DisplayNameFor(model => model.DueDate)</th>
+                <th>@Html.DisplayNameFor(model => model.CreatedAt)</th>
+                <th>@Html.DisplayNameFor(model => model.Status)</th>
+                <th>@Html.DisplayNameFor(model => model.Approved)</th>
+                <!--<th>Acciones</th>-->
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Id)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                    <td>@Html.DisplayFor(modelItem => item.DueDate)</td>
+                    <td>@Html.DisplayFor(modelItem => item.CreatedAt)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Approved)</td>
+                    <!--
+                    <td class="action-links">
+                        @*@Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
+                        @Html.ActionLink("Eliminar", "Delete", new { id = item.Id })*@
+                    </td>
+                    -->
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
