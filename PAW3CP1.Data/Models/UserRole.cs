@@ -12,7 +12,7 @@ public partial class UserRole
 
     public string? Description { get; set; }
 
-    public virtual Role Role { get; set; } = null!;
+    public virtual Role? Role { get; set; } = null!;
 
     [JsonIgnore]
     public virtual User User { get; set; } = null!;
