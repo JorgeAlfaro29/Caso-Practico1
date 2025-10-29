@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using PAW3CP1.Mvc.ServiceApi;
 
 namespace PAW3CP1.Mvc.Controllers
@@ -33,6 +34,8 @@ namespace PAW3CP1.Mvc.Controllers
                     return View("Login");
                 }
 
+                var userRole = user.UserRoles.FirstOrDefault()?.RoleId ?? 0;
+
                 // Session https://learn.microsoft.com/en-us/aspnet/core/fundamentals/app-state?view=aspnetcore-9.0
                 HttpContext.Session.SetInt32("UserId", user.UserId);
                 HttpContext.Session.SetString("Username", user.Username ?? "");
@@ -41,6 +44,7 @@ namespace PAW3CP1.Mvc.Controllers
                 HttpContext.Session.SetString("UserIsActive", user.IsActive.ToString());
                 HttpContext.Session.SetString("UserCreatedAt", user.CreatedAt.ToString("g"));
                 HttpContext.Session.SetString("UserLastLogin", user.LastLogin?.ToString("g") ?? "Nunca");
+                HttpContext.Session.SetInt32("UserRole", userRole);
 
                 return RedirectToAction("Index", "Home");
             }

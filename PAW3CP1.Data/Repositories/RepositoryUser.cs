@@ -14,7 +14,7 @@ namespace PAW3CP1.Data.Repositories
     {
         public async Task<User> GetUserByEmailAsync(string email)
         {
-            var user = await DbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+            var user = await DbContext.Users.Include(u => u.UserRoles).FirstOrDefaultAsync(u => u.Email == email);
             return user ?? throw new InvalidOperationException($"User with email '{email}' not found.");
 
             /* Non-simplified method:

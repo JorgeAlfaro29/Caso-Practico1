@@ -9,6 +9,7 @@
     var userIsActive = HttpContextAccessor.HttpContext.Session.GetString("UserIsActive");
     var userCreatedAt = HttpContextAccessor.HttpContext.Session.GetString("UserCreatedAt");
     var userLastLogin = HttpContextAccessor.HttpContext.Session.GetString("UserLastLogin");
+    var userRole = HttpContextAccessor.HttpContext.Session.GetInt32("UserRole");
 }
 
 <style>
@@ -107,6 +108,8 @@
         <p><strong>Activo:</strong> @(userIsActive == "True" ? "Sí" : "No")</p>
         <p><strong>Creado en:</strong> @userCreatedAt</p>
         <p><strong>Último inicio de sesión:</strong> @userLastLogin</p>
+        <p><strong>Role:</strong> @userRole</p>
+
     </div>
 
 </div>
