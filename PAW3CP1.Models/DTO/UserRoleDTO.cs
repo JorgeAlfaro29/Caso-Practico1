@@ -1,7 +1,7 @@
 ﻿using PAW3CP1.Models.DTO;
 using System.Text.Json.Serialization;
 
-namespace PAW3CP1.Data.Models;
+namespace PAW3CP1.Models.DTO;
 
 public partial class UserRoleDTO
 {
@@ -17,6 +17,7 @@ public partial class UserRoleDTO
     [JsonPropertyName("role")]
     public virtual RoleDTO Role { get; set; } = null!;
 
-    [JsonIgnore]
+    [JsonPropertyName("user")]
     public virtual UserDTO User { get; set; } = null!;
 }
+

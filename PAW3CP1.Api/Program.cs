@@ -21,6 +21,17 @@ builder.Services.AddScoped<IRepositoryTask, RepositoryTask>();
 builder.Services.AddDbContext<TaskDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// configurar CORS - permite la app MVC (ajusta el origin si tu MVC corre en otro puerto)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowMvc", policy =>
+    {
+        policy.WithOrigins("https://localhost:7216") // cambia al puerto de tu MVC
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 
 var app = builder.Build();
 
@@ -30,6 +41,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors("AllowMvc");
+
 
 app.UseHttpsRedirection();
 
@@ -47,33 +60,49 @@ app.MapPut("/approvals/{id}", async (int id, string status, ClaimsPrincipal user
     return Results.Ok(new { message = result });
 }).RequireAuthorization();
 
-app.MapGet("/userroles/view", async (TaskDbContext db) =>
+app.MapGet("/userroles/view", async (TaskDbContext db, ILogger<Program> logger) =>
 {
-    var roles = await db.Roles
-        .Select(r => new RoleDTO
-        {
-            RoleId = r.RoleId,
-            RoleName = r.RoleName,
-            Description = r.Description
-        }).ToListAsync();
-
-    var users = await db.Users
-        .Include(u => u.UserRoles)
-        .ThenInclude(ur => ur.Role)
-        .ToListAsync();
-
-    var result = users.Select(u => new UserRoleViewDTO
+    try
     {
-        UserId = u.UserId,
-        Email = u.Email,
-        FullName = u.FullName ?? "",
-        CurrentRoleId = u.UserRoles.FirstOrDefault()?.RoleId ?? 0,
-        CurrentRoleName = u.UserRoles.FirstOrDefault()?.Role?.RoleName ?? "Sin rol",
-        AvailableRoles = roles
-    }).ToList();
+        var roles = await db.Roles
+            .Select(r => new RoleDTO { RoleId = r.RoleId, RoleName = r.RoleName, Description = r.Description })
+            .ToListAsync();
 
-    return Results.Ok(result);
+        var users = await db.Users
+            .Include(u => u.UserRoles)
+            .ThenInclude(ur => ur.Role)
+            .ToListAsync();
+
+        var result = users.Select(u => new UserRoleDTO
+        {
+            UserId = u.UserId,
+            RoleId = u.UserRoles.FirstOrDefault()?.RoleId ?? 0,
+            Description = u.UserRoles.FirstOrDefault()?.Description,
+            Role = u.UserRoles.FirstOrDefault()?.Role != null
+                ? new RoleDTO
+                {
+                    RoleId = u.UserRoles.First().Role.RoleId,
+                    RoleName = u.UserRoles.First().Role.RoleName,
+                    Description = u.UserRoles.First().Role.Description
+                }
+                : null,
+            User = new UserDTO
+            {
+                UserId = u.UserId,
+                Username = u.Username,
+                Email = u.Email
+            }
+        }).ToList();
+
+        return Results.Ok(result);
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Error al obtener userroles");
+        return Results.Problem(ex.Message);
+    }
 });
+
 
 app.MapPost("/userroles/assign", async (TaskDbContext db, AssignRoleRequest request) =>
 {

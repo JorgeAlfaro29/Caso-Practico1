@@ -1,5 +1,5 @@
 ﻿@using PAW3CP1.Models.DTO
-@model List<UserRoleViewDTO>
+@model List<UserRoleDTO>
 
 <h2 class="mb-4">Asignar Roles a Usuarios</h2>
 
@@ -11,12 +11,10 @@
 {
     <div class="alert alert-danger">@TempData["Error"]</div>
 }
-
 @if (TempData["Success"] != null)
 {
     <div class="alert alert-success">@TempData["Success"]</div>
 }
-
 
 <table class="table table-bordered table-striped align-middle">
     <thead class="table-dark">
@@ -27,29 +25,47 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var user in Model)
+        @* Asegúrate de que Model no sea null *@
+        @if (Model != null && Model.Any())
+        {
+            // ViewBag.Roles debe contener List<RoleDTO>
+            var availableRoles = ViewBag.Roles as List<RoleDTO> ?? new List<RoleDTO>();
+
+            foreach (var userRole in Model)
+            {
+                <tr>
+                    <td>
+                        @(userRole?.User?.Email ?? "— sin email —")
+                    </td>
+                    <td>
+                        @(userRole?.Role?.RoleName ?? "— sin rol —")
+                    </td>
+                    <td>
+                        <form asp-action="SaveRole" method="post" class="d-flex gap-2 align-items-center">
+                            <input type="hidden" name="userId" value="@(userRole?.UserId ?? 0)" />
+
+                            <select name="roleId" class="form-select" style="width: auto;">
+                                @foreach (var role in availableRoles)
+                                {
+                                    // Comparar con userRole.RoleId (id del rol actual en ese userRole)
+                                    var selected = (role.RoleId == (userRole?.RoleId ?? 0)) ? "selected" : null;
+                                    <option value="@role.RoleId">
+                                        @role.RoleName
+                                    </option>
+                                }
+                            </select>
+
+                            <button type="submit" class="btn btn-primary">Guardar</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+        else
         {
             <tr>
-                <td>@user.Email</td>
-                <td>@user.CurrentRoleName</td>
-                <td>
-                    <!-- 🔹 Formulario dentro de la celda -->
-                    <form asp-action="SaveRole" method="post" class="d-flex gap-2">
-                        <input type="hidden" name="userId" value="@user.UserId" />
-                        
-                        <select name="roleId" class="form-select" style="width: auto;">
-                            @foreach (var role in user.AvailableRoles)
-                            {
-                                @:<option value="@role.RoleId" @(role.RoleId == user.CurrentRoleId ? "selected" : "")>@role.RoleName</option>
-                            }
-                        </select>
-
-                        <button type="submit" class="btn btn-primary">Guardar</button>
-                    </form>
-                </td>
+                <td colspan="3" class="text-center">No hay usuarios para mostrar.</td>
             </tr>
         }
     </tbody>
 </table>
-
-

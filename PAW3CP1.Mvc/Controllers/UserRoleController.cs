@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PAW3CP1.Data.Models;
 using PAW3CP1.Models.DTO;
 using PAW3CP1.Mvc.ServiceApi;
 
@@ -10,6 +11,7 @@ namespace PAW3CP1.Mvc.Controllers
     public class UserRoleController : Controller
     {
         private readonly IUserRoleService _userRoleService;
+      
 
         public UserRoleController(IUserRoleService userRoleService)
         {
@@ -18,13 +20,10 @@ namespace PAW3CP1.Mvc.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var roleName = TempData["UserRoleName"]?.ToString();
-            // if (roleName != "Manager" && roleName != "System Admin")
-            //    return Unauthorized();
-
             var model = await _userRoleService.GetUserRolesViewAsync();
             return View(model);
         }
+
 
         // POST: /UserRole/AssignRole
         [HttpPost]

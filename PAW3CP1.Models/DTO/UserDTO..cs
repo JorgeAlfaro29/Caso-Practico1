@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using PAW3CP1.Data.Models;
 using PAW3CP1.Models.DTO;
 
 namespace PAW3CP1.Models.DTO
