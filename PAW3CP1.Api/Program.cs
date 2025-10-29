@@ -47,33 +47,6 @@ app.MapPut("/approvals/{id}", async (int id, string status, ClaimsPrincipal user
     return Results.Ok(new { message = result });
 }).RequireAuthorization();
 
-app.MapGet("/userroles/view", async (TaskDbContext db) =>
-{
-    var roles = await db.Roles
-        .Select(r => new RoleDTO
-        {
-            RoleId = r.RoleId,
-            RoleName = r.RoleName,
-            Description = r.Description
-        }).ToListAsync();
-
-    var users = await db.Users
-        .Include(u => u.UserRoles)
-        .ThenInclude(ur => ur.Role)
-        .ToListAsync();
-
-    var result = users.Select(u => new UserRoleViewDTO
-    {
-        UserId = u.UserId,
-        Email = u.Email,
-        FullName = u.FullName ?? "",
-        CurrentRoleId = u.UserRoles.FirstOrDefault()?.RoleId ?? 0,
-        CurrentRoleName = u.UserRoles.FirstOrDefault()?.Role?.RoleName ?? "Sin rol",
-        AvailableRoles = roles
-    }).ToList();
-
-    return Results.Ok(result);
-});
 
 app.MapPost("/userroles/assign", async (TaskDbContext db, AssignRoleRequest request) =>
 {

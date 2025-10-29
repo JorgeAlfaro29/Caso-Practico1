@@ -1,15 +1,16 @@
 ﻿using System.Text.Json;
 using PAW3CP1.Architecture;
 using PAW3CP1.Architecture.Providers;
+using PAW3CP1.Data.Models;
 using PAW3CP1.Models.DTO;
 
 namespace PAW3CP1.Mvc.ServiceApi
 {
     public interface IUserRoleService
     {
-        Task<List<UserRoleViewDTO>> GetUserRolesViewAsync();
+        Task<List<UserRoleDTO>> GetUserRolesViewAsync();
         Task<bool> AssignRoleAsync(int userId, int roleId);
-        Task<UserRoleViewDTO?> GetUserRoleByIdAsync(int userId);
+        Task<UserRoleDTO?> GetUserRoleByIdAsync(int userId);
 
     }
 
@@ -17,10 +18,10 @@ namespace PAW3CP1.Mvc.ServiceApi
     {
         private readonly string _baseUrl = "https://localhost:7265/userroles";
 
-        public async Task<List<UserRoleViewDTO>> GetUserRolesViewAsync()
+        public async Task<List<UserRoleDTO>> GetUserRolesViewAsync()
         {
             var response = await restProvider.GetAsync($"{_baseUrl}/view", null);
-            return await JsonProvider.DeserializeAsync<List<UserRoleViewDTO>>(response);
+            return await JsonProvider.DeserializeAsync<List<UserRoleDTO>>(response);
         }
 
         public async Task<bool> AssignRoleAsync(int userId, int roleId)
@@ -31,10 +32,10 @@ namespace PAW3CP1.Mvc.ServiceApi
             return response.Contains("success", StringComparison.OrdinalIgnoreCase);
         }
 
-        public async Task<UserRoleViewDTO?> GetUserRoleByIdAsync(int userId)
+        public async Task<UserRoleDTO?> GetUserRoleByIdAsync(int userId)
         {
             var response = await restProvider.GetAsync($"{_baseUrl}/view/{userId}", null);
-            return await JsonProvider.DeserializeAsync<UserRoleViewDTO?>(response);
+            return await JsonProvider.DeserializeAsync<UserRoleDTO?>(response);
         }
 
 

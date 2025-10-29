@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using PAW3CP1.Data.Models;
 
 namespace PAW3CP1.Models.DTO
 {
@@ -17,5 +18,8 @@ namespace PAW3CP1.Models.DTO
 
         [JsonPropertyName("description")]
         public string? Description { get; set; }
+
+        [JsonPropertyName("userRoles")]
+        public virtual ICollection<UserRoleDTO> UserRoles { get; set; } = new List<UserRoleDTO>();
     }
 }

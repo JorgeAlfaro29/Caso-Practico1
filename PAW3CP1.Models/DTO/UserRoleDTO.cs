@@ -1,10 +1,10 @@
 ﻿using PAW3CP1.Models.DTO;
 using System.Text.Json.Serialization;
 
-namespace PAW3CP1.Data.Models;
-
-public partial class UserRoleDTO
+namespace PAW3CP1.Data.Models
 {
+    public partial class UserRoleDTO
+    {
     [JsonPropertyName("userId")]
     public int UserId { get; set; }
 
@@ -19,4 +19,5 @@ public partial class UserRoleDTO
 
     [JsonIgnore]
     public virtual UserDTO User { get; set; } = null!;
+    }
 }
