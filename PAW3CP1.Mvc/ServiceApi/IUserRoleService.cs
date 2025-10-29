@@ -9,6 +9,8 @@ namespace PAW3CP1.Mvc.ServiceApi
     {
         Task<List<UserRoleViewDTO>> GetUserRolesViewAsync();
         Task<bool> AssignRoleAsync(int userId, int roleId);
+        Task<UserRoleViewDTO?> GetUserRoleByIdAsync(int userId);
+
     }
 
     public class UserRoleService(IRestProvider restProvider) : IUserRoleService
@@ -28,6 +30,13 @@ namespace PAW3CP1.Mvc.ServiceApi
 
             return response.Contains("success", StringComparison.OrdinalIgnoreCase);
         }
+
+        public async Task<UserRoleViewDTO?> GetUserRoleByIdAsync(int userId)
+        {
+            var response = await restProvider.GetAsync($"{_baseUrl}/view/{userId}", null);
+            return await JsonProvider.DeserializeAsync<UserRoleViewDTO?>(response);
+        }
+
 
     }
 
