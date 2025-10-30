@@ -24,10 +24,25 @@ builder.Services.AddScoped<ITaskBusiness, TaskBusiness>();
 builder.Services.AddScoped<IRestProvider, RestProvider>();
 builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 
 
+# region Session
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); 
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+builder.Services.AddHttpContextAccessor();
+# endregion
 
 var app = builder.Build();
+
+# region Session
+app.UseSession();
+# endregion
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

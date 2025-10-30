@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using PAW3CP1.Core.BusinessLogic;
 using PAW3CP1.Data.Models;
 using PAW3CP1.Data.Repositories;
+using PAW3CP1.Models.DTO;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<TaskDbContext>(opt =>
@@ -37,6 +38,74 @@ app.MapGet("/login", async (string email, IUserBusiness userBusiness) =>
     }
 });
 
+app.MapGet("/userroles/view", async (TaskDbContext db) =>
+{
+    var roles = await db.Roles
+        .Select(r => new RoleDTO
+        {
+            RoleId = r.RoleId,
+            RoleName = r.RoleName,
+            Description = r.Description
+        }).ToListAsync();
 
+    var users = await db.Users
+        .Include(u => u.UserRoles)
+        .ThenInclude(ur => ur.Role)
+        .ToListAsync();
+
+    var result = users.Select(u => new UserRoleDTO
+    {
+        UserId = u.UserId,
+        RoleId = u.UserRoles.FirstOrDefault()?.RoleId ?? 0,
+        Description = u.UserRoles.FirstOrDefault()?.Description ?? "Sin rol asignado",
+        Role = u.UserRoles.FirstOrDefault()?.Role != null
+            ? new RoleDTO
+            {
+                RoleId = u.UserRoles.First().Role.RoleId,
+                RoleName = u.UserRoles.First().Role.RoleName,
+                Description = u.UserRoles.First().Role.Description
+            }
+            : null,
+        User = new UserDTO
+        {
+            UserId = u.UserId,
+            Username = u.Username,
+            Email = u.Email
+        }
+    }).ToList();
+
+    return Results.Ok(result);
+});
+
+app.MapPost("/userroles/assign", async (TaskDbContext db, AssignRoleRequest request) =>
+{
+var user = await db.Users.FindAsync(request.UserId);
+var role = await db.Roles.FindAsync(request.RoleId);
+
+if (user == null || role == null)
+return Results.BadRequest("Usuario o rol inválido.");
+
+var existingRoles = db.UserRoles.Where(ur => ur.UserId == request.UserId);
+db.UserRoles.RemoveRange(existingRoles); // Elimina el rol anterior
+
+db.UserRoles.Add(new UserRole
+{
+UserId = request.UserId,
+RoleId = request.RoleId,
+Description = $"Asignado el {DateTime.Now:g}"
+});
+
+await db.SaveChangesAsync();
+return Results.Ok("success");
+});
 
 app.Run();
+
+
+public class AssignRoleRequest
+{
+    public int UserId { get; set; }
+    public int RoleId { get; set; }
+}
+
+

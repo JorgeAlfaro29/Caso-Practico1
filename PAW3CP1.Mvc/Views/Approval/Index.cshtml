@@ -1,37 +1,142 @@
 ﻿@model IEnumerable<PAW3CP1.Models.DTO.TaskDTO>
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@* Diseño con IA, prompt: tome de referencia el layout para hacer la vista.*@
 
-<h2>Flujo de Aprobaciones</h2>
+@{
+    var userId = HttpContextAccessor.HttpContext.Session.GetInt32("UserId");
+    var username = HttpContextAccessor.HttpContext.Session.GetString("Username");
+    var userEmail = HttpContextAccessor.HttpContext.Session.GetString("UserEmail");
+    var userFullName = HttpContextAccessor.HttpContext.Session.GetString("UserFullName");
+    var userIsActive = HttpContextAccessor.HttpContext.Session.GetString("UserIsActive");
+    var userCreatedAt = HttpContextAccessor.HttpContext.Session.GetString("UserCreatedAt");
+    var userLastLogin = HttpContextAccessor.HttpContext.Session.GetString("UserLastLogin");
+}
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Título</th>
-            <th>Estado</th>
-            <th>Fecha (UTC)</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.OrderBy(r => r.Status ?? ""))
-        {
-            <tr>
-                <td>@item.Name</td>
-                
-                <td>@(!string.IsNullOrWhiteSpace(item.Status) ? item.Status : "Sin estado")</td>
-                <td>@(item.CreatedAt.HasValue? item.CreatedAt.Value.ToUniversalTime().ToString("g") : "Sin fecha")</td>
-                <td>
-                    @*se comenta para nivel de pruebas ya que falta los roles*@
-                   @*if (User.IsInRole("Manager"))*@
+<style>
+    /* CONTENEDOR PRINCIPAL */
+    .approvals-container {
+        background: #ffffffee;
+        border-radius: 1rem;
+        padding: 2rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        max-width: 1200px;
+        margin: 2rem auto;
+    }
 
-                    {
-                        <button onclick="updateStatus(@item.Id, 'Approved')">Aprobar</button>
-                        <button onclick="updateStatus(@item.Id, 'Denied')">Denegar</button>
-                    }
-                </td>
-            </tr>
+        /* TÍTULO */
+        .approvals-container h2 {
+            font-weight: 700;
+            color: #007bff;
+            margin-bottom: 1.5rem;
         }
-    </tbody>
-</table>
+
+    /* TABLA */
+    .custom-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 0.75rem;
+        overflow: hidden;
+        background: white;
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+    }
+
+        .custom-table thead {
+            background: linear-gradient(135deg, #74b9ff, #a29bfe);
+            color: white;
+            font-weight: 600;
+        }
+
+        .custom-table th, .custom-table td {
+            padding: 0.9rem 1rem;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .custom-table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+            .custom-table tbody tr:hover {
+                background-color: #f1f7ff;
+            }
+
+    /* BOTONES DE ACCIÓN */
+    .action-btn {
+        border: none;
+        border-radius: 0.5rem;
+        color: white;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        margin: 0 0.3rem;
+    }
+
+    .approve-btn {
+        background: linear-gradient(135deg, #00b894, #55efc4);
+    }
+
+        .approve-btn:hover {
+            background: linear-gradient(135deg, #00cec9, #00b894);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+
+    .deny-btn {
+        background: linear-gradient(135deg, #d63031, #ff7675);
+    }
+
+        .deny-btn:hover {
+            background: linear-gradient(135deg, #c0392b, #e17055);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+
+    /* RESPONSIVE */
+    @@media (max-width: 768px) {
+        .custom-table {
+            display: block;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+    }
+</style>
+
+<div class="approvals-container">
+    <h2>Flujo de Aprobaciones</h2>
+
+    <table class="custom-table">
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Estado</th>
+                <th>Fecha (UTC)</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.OrderBy(r => r.Status ?? ""))
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@(!string.IsNullOrWhiteSpace(item.Status) ? item.Status : "Sin estado")</td>
+                    <td>@(item.CreatedAt.HasValue? item.CreatedAt.Value.ToUniversalTime().ToString("g") : "Sin fecha")</td>
+                    <td>
+                        <button class="action-btn approve-btn" onclick="updateStatus(@item.Id, 'Approved')">
+                            Aprobar
+                        </button>
+                        <button class="action-btn deny-btn" onclick="updateStatus(@item.Id, 'Denied')">
+                            Denegar
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 <script>
     async function updateStatus(id, status) {

@@ -1,0 +1,81 @@
+﻿@* Diseño con IA, prompt: ayudame a hacer un html de login bonito. (copy&paste de codigo html todo feo jaja)*@
+ 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - PAW3CP1.Mvc</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #74b9ff, #a29bfe);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .auth-card {
+            background: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .auth-logo {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+            .auth-logo img {
+                width: 80px;
+                height: 80px;
+            }
+
+        .auth-title {
+            font-weight: 700;
+            color: #333;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #fff;
+        }
+
+            footer a {
+                color: #fff;
+                text-decoration: underline;
+            }
+    </style>
+</head>
+<body>
+    <div class="auth-card">
+        <div class="auth-logo">
+            <!-- Puedes poner aquí un logo -->
+            <img src="~/images/logo.png" alt="Logo" onerror="this.style.display='none'">
+        </div>
+
+        @RenderBody()
+    </div>
+
+    <footer>
+        &copy; 2025 - Caso Estudio 1 - Progra Avanzada Web |
+        <a asp-controller="Login" asp-action="Login">Privacidad</a>
+    </footer>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
